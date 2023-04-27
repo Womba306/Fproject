@@ -1,0 +1,193 @@
+﻿<UserControl x:Class="DoublePendulum.DoublePendulumView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DoublePendulum"
+             Name="doublePendulumWindow"
+             mc:Ignorable="d"
+             Background="{Binding Source={x:Static local:GlobalColors.BackgroundColor}}"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DoublePendulum;component/Dictionary/slider/SliderDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DoublePendulum;component/Dictionary/Button/ButtonDictionary.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/DoublePendulum;component/Dictionary/CheckBox/CheckBoxDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Canvas Name="canvas">
+
+            <Line Name="firstArm" Stroke="White" StrokeThickness="2"
+              X1="{Binding Path=CenterPoint.X}"
+              Y1="{Binding Path=CenterPoint.Y}"
+              X2="{Binding Path=EndFirstArmPoint.X}"
+              Y2="{Binding Path=EndFirstArmPoint.Y}"
+              />
+
+            <Line Name="secondArm" Stroke="White" StrokeThickness="2"
+              X1="{Binding Path=SecondArmPoint.X}"
+              Y1="{Binding Path=SecondArmPoint.Y}"
+              X2="{Binding Path=SecondArmEndPoint.X}"
+              Y2="{Binding Path=SecondArmEndPoint.Y}"
+              />
+
+
+            <Path Fill="White">
+                <Path.Data>
+                    <EllipseGeometry x:Name="firstCircle"
+                                 Center="{Binding Path=FirstCirclePoint}"
+                                 RadiusX="{Binding Path=FirstCircleRadius.X}"
+                                 RadiusY="{Binding Path=FirstCircleRadius.Y}"
+                                 />
+                </Path.Data>
+            </Path>
+
+            <Path Fill="White">
+                <Path.Data>
+                    <EllipseGeometry x:Name="secondCircle"
+                                 Center="{Binding Path=SecondCirclePoint}"
+                                 RadiusX="{Binding Path=SecondCircleRadius.X}"
+                                 RadiusY="{Binding Path=SecondCircleRadius.Y}"
+                                 />
+                </Path.Data>
+            </Path>
+        </Canvas>
+
+        <StackPanel Visibility="Hidden" Name="stackPanelSlider1" Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 10, 0, 10">
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Weight Circle1: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.M1, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <Slider Margin="10, 0, 10, 0" Name="sliderWeightCircle1" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding Path=DoublePendulumModel.M1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                    Minimum="1" Maximum="50" IsSnapToTickEnabled="True" TickFrequency="1"/>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Weihgt Circle2: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.M2, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <Slider Margin="5, 0, 5, 0" Name="sliderWeightCircle2" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding Path=DoublePendulumModel.M2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                    Minimum="1" Maximum="50" IsSnapToTickEnabled="True" TickFrequency="1"/>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Friction: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.Friction, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+            
+            <Slider Margin="5, 0, 5, 0" Name="sliderFriction" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding Path=DoublePendulumModel.Friction, UpdateSourceTrigger=PropertyChanged}" 
+                    Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1"/>
+
+        </StackPanel>
+
+        <StackPanel Visibility="Hidden" Name="stackPanelSlider2"  Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0, 10, 0, 10">
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Length arm1: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.R1, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <Slider Margin="10, 0, 10, 0" Name="sliderLengthArm1" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding Path=DoublePendulumModel.R1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                    Minimum="10" Maximum="400" IsSnapToTickEnabled="True" TickFrequency="1"/>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Length arm2: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.R2, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <Slider Margin="10, 0, 10, 0" Name="sliderLengthArm2" Style="{StaticResource CustomSlider}"  
+                    Value="{Binding Path=DoublePendulumModel.R2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                    Minimum="10" Maximum="400" IsSnapToTickEnabled="True" TickFrequency="1"/>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="20">
+                <Run Text="Gravity: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.G, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            </TextBlock>
+
+            <Slider Margin="5, 0, 5, 0" Name="sliderGravity" Style="{StaticResource CustomSlider}" 
+                    Value="{Binding Path=DoublePendulumModel.G, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                    Minimum="0" Maximum="1" IsSnapToTickEnabled="True" TickFrequency="0.1"/>
+
+        </StackPanel>
+
+        <StackPanel x:Name="stackPanelButtons1" Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <Button Name="buttonPause" Style="{DynamicResource DefaultButtonStyle}" Click="ButtonPause_Click"
+                    ToolTip="Pause/Resum the pendulum">
+                <Image SnapsToDevicePixels="True" Source="/Images/Pause_16x.png"/>
+            </Button>
+
+            <Button Name="buttonStop" Style="{DynamicResource DefaultButtonStyle}" Click="ButtonStop_Click"
+                    ToolTip="Reset the pendulum">
+                <Image Source="/Images/Stop_16x.png"/>
+            </Button>
+
+            <Button Name="buttonStart" Style="{DynamicResource DefaultButtonStyle}" Click="ButtonStart_Click"
+                    ToolTip="Start the pendulum">
+                <Image Source="/Images/StartWithoutDebug_16x.png"/>
+            </Button>
+            
+        </StackPanel>
+
+        <StackPanel x:Name="stackPanelButtons2" Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <CheckBox Name="checkBoxTrace" VerticalAlignment="Center" Content="Trace" IsChecked="True"/>
+            
+            <Button Name="buttonClean" Style="{DynamicResource DefaultButtonStyle}" Click="buttonClean_Click" 
+                    ToolTip="Clean the trace line">
+                <Image SnapsToDevicePixels="True" Source="/Images/CleanData_inverse_16x.png"/>
+            </Button>
+            <Button Name="buttonFullScreen" Style="{DynamicResource DefaultButtonStyle}" Click="ButtonFullScreen_Click"
+                    ToolTip="FUll screen">
+                <Image SnapsToDevicePixels="True" Source="/Images/AutosizeOptimize_16x.png"/>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Visibility="Hidden" Name="stackPanelCircle1Data" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="15">
+                <Run Text="Circle1 Velocity: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.A1_v, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="15">
+                <Run Text="Circle1 Acceleration: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.A1, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+        </StackPanel>
+
+        <StackPanel Visibility="Hidden" Name="stackPanelCircle2Data" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="15">
+                <Run Text="Circle2 Velocity: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.A2_v, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+            <TextBlock Margin="10, 0, 10, 0" Foreground="{Binding Source={x:Static local:GlobalColors.ForegroundColor}}" FontSize="15">
+                <Run Text="Circle2 Acceleration: "/>
+                <Run Text="{Binding Path=DoublePendulumModel.A2, UpdateSourceTrigger=PropertyChanged}"/>
+            </TextBlock>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

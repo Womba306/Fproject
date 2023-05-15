@@ -189,7 +189,7 @@ namespace DoublePendulum
             using (StreamWriter writer = new StreamWriter(@"..\Out.txt", true))
             {
                 DateTime dateTime = new DateTime();
-                string text = $"{DateTime.Now}: {den-((num1+num2)*num3/num4)}";
+                string text = $"{DateTime.Now}: {(den-((num1+num2)*num3/num4)*r1 * Math.Sin(a1), r1 * Math.Cos(a1)+1543)/A1}";
                 writer.WriteLineAsync($"{text}");
                
             }
